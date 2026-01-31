@@ -194,7 +194,7 @@
   display: inline-flex;
   align-items: center;
   gap: .5rem;
-  background: #c14300 !important;
+  background: linear-gradient(135deg, #0f766e, #155e75) !important;
   color: #ffffff !important;
   padding: .9rem 1rem;
   border-radius: 12px;
@@ -206,7 +206,7 @@
 
 .consult-send:hover {
   transform: translateY(-2px);
-  background: rgb(1, 98, 177) !important;
+  background: linear-gradient(135deg, #0d6b63, #0d4f62) !important;
 }
 
 /* spinner inside button */
