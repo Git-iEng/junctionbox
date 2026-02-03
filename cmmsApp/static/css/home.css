@@ -187,7 +187,7 @@ body {
   background: #ffffff;
   border-radius: var(--bo-radius-lg);
   box-shadow: var(--bo-shadow-soft);
-  padding: 18px;
+  padding: 10px;
   display: grid;
   gap: 14px;
 }
@@ -932,7 +932,7 @@ body {
 .lv-epp-year {
   position: absolute;
   inset: 12px auto auto 12px;
-  background: linear-gradient(135deg, #ff9500, #ffb74d);
+  background: linear-gradient(135deg, #0f766e, #155e75);
   color: #fff;
   font-weight: 700;
   font-size: 12px;
@@ -1169,4 +1169,77 @@ body {
 .lv-electric-panel-project .lv-epp-card:hover,
 .lv-electric-panel-project .lv-epp-card:hover .lv-epp-media img{
   transform: none !important;
+}
+
+
+/* =========================================
+   1) JB DETAILS: make bullets look consistent
+========================================= */
+.jb-detail-list{
+  list-style: none;        /* remove default bullets */
+  padding-left: 0;         /* align clean */
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.jb-detail-list li{
+  position: relative;
+  padding-left: 22px;      /* space for custom bullet */
+  line-height: 1.6;
+}
+
+.jb-detail-list li::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bo-accent);                  /* matches buttons theme */
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15); /* same feel as bo-check-dot */
+}
+
+/* =========================================
+   2) ABOUT/OUR JOURNEY/WHERE WE OPERATE
+      make the "sign" match button colors
+========================================= */
+.eyebrow-neplan-what-we-bring{
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+
+  /* keep your existing text color */
+  color: inherit !important;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* optional: add a small accent line like your screenshot */
+.eyebrow-neplan-what-we-bring::before{
+  content: "";
+  width: 34px;
+  height: 3px;
+  border-radius: 999px;
+
+  /* match your button gradient */
+  background: linear-gradient(135deg, #0f766e, #155e75) !important;
+
+  display: inline-block;
+}
+/* Locations: email links - remove underline and style nicely */
+/* Email links in location cards: plain teal text (like screenshot) */
+.ieng-loc-row a{
+  color: #0f766e !important;     /* same as theme buttons */
+  text-decoration: none !important;
+  font-weight: 600;             /* optional: keeps it readable */
+}
+
+.ieng-loc-row a:hover{
+  color: #155e75 !important;     /* subtle hover */
+  text-decoration: none !important;
 }
