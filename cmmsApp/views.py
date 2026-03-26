@@ -25,6 +25,9 @@ from .utils_contact import normalize_phone_and_country, country_name_from_alpha2
 from django.http import JsonResponse
 import pycountry, phonenumbers
 from django.contrib.staticfiles.storage import staticfiles_storage
+import requests
+from django.conf import settings
+
 
 # ---------- Validation patterns ----------
 NAME_RE  = re.compile(r"^[A-Za-z\s'.-]{2,}$")
@@ -101,6 +104,11 @@ def _send_contact_email_async(subject: str, text_body: str, html_body: str | Non
 def request_demo_view(request):
     if request.method != "POST":
         return redirect("/")
+    
+        # CAPTCHA check
+        if not verify_recaptcha(request):
+            messages.error(request, "Please complete the CAPTCHA.")
+        return redirect(request.META.get("HTTP_REFERER", "/"))
 
     # Pull fields
     full_name = request.POST.get("full_name", "").strip()
@@ -132,6 +140,8 @@ def request_demo_view(request):
             messages.error(request, msg)
         # Go back to the page that opened the modal (so your JS toast can show)
         return redirect(request.META.get("HTTP_REFERER", "/"))
+    
+    
 
     # Split "IN|+91"
     country_code, dial = (country.split("|", 1) + [""])[:2]
@@ -181,8 +191,9 @@ def request_demo_view(request):
 
 
 def home(request):
-    return render(request, "index.html")
-
+    return render(request, "index.html", {
+        "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
+    })
 
 def request_demo(request):
     return render(request, "request_demo_modal.html")
@@ -190,7 +201,10 @@ def request_demo(request):
 
 
 
-def contact(request):     return render(request, "contact.html")
+def contact(request):
+    return render(request, "neplan-contact.html", {
+        "RECAPTCHA_SITE_KEY": settings.RECAPTCHA_SITE_KEY
+    })
 
 def about(request):       return render(request, "about.html")
 
@@ -306,6 +320,11 @@ def contact_block_submit(request):
     """
     if request.method != "POST":
         return redirect(request.META.get("HTTP_REFERER", "/"))
+    
+     # CAPTCHA check
+    if not verify_recaptcha(request):
+        messages.error(request, "Please complete the CAPTCHA.")
+        return redirect(request.META.get("HTTP_REFERER", "/"))
 
     name    = (request.POST.get("name")    or "").strip()
     email   = (request.POST.get("email")   or "").strip()
@@ -409,3 +428,27 @@ def country_list(request):
   return JsonResponse(data, safe=False)
 def contact_thanks(request):
     return render(request, "contact_thanks.html", {})
+
+
+def verify_recaptcha(request):
+    captcha_response = (request.POST.get("g-recaptcha-response") or "").strip()
+
+    if not captcha_response:
+        return False
+
+    data = {
+        "secret": settings.RECAPTCHA_SECRET_KEY,
+        "response": captcha_response,
+    }
+
+    try:
+        response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data=data,
+            timeout=10
+        )
+        result = response.json()
+        return result.get("success", False)
+    except requests.RequestException:
+        return False
+

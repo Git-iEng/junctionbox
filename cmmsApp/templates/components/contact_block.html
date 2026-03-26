@@ -1,5 +1,62 @@
 {% load static %}
+<style>
+    .form-captcha{
+  width: 100%;
+  margin: 15px 0 20px;
+}
 
+.form-captcha .g-recaptcha{
+  background: #fff;
+  border-radius: 10px;
+}
+
+@media (max-width: 480px){
+  .form-captcha .g-recaptcha{
+    transform: scale(0.92);
+    transform-origin: left top;
+  }
+}
+
+  .consult-captcha{
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 14px 0 18px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .consult-captcha .g-recaptcha{
+    display: inline-block;
+    min-height: 78px;
+    padding: 8px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    transform-origin: left top;
+  }
+
+  .consult-form,
+  .consult-grid,
+  .consult-block,
+  .consult-block__inner{
+    overflow: visible !important;
+  }
+
+  @media (max-width: 768px){
+    .consult-captcha{
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  @media (max-width: 480px){
+    .consult-captcha .g-recaptcha{
+      transform: scale(0.90);
+    }
+  }
+</style>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -68,6 +125,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 <textarea name="message" rows="2" placeholder="Your Message (optional)"></textarea>
 
+                <div class="consult-captcha">
+                    <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+                </div>
+
                 <button id="consult-submit" class="consult-send btn-primary-solar-system" type="submit">
                     <span class="label">Send Message</span>
                     <span class="spinner" aria-hidden="true"></span>
@@ -80,6 +141,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- Optional UX sync: derive country from +code or add dial code from country.
    Uses a tiny JSON endpoint provided below. Remove if you prefer only server-side logic.  -->
 <!-- Global top-of-page toast -->
+ <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <div id="global-toast" class="global-toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
